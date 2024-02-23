@@ -5,21 +5,19 @@ import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { TokenService } from '../../service/token.service';
-
-@Component({
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+@
+Component({
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
+    addressForm: FormGroup;
     items!: MenuItem[];
-
     products!: Product[];
-
     chartData: any;
-
     chartOptions: any;
-
     subscription!: Subscription;
+    tokens: any;
 
     constructor(private productService: ProductService, public layoutService: LayoutService, private tokenService: TokenService) {
         this.subscription = this.layoutService.configUpdate$
@@ -27,17 +25,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .subscribe((config) => {
             this.initChart();
         });
-        console.log(tokenService.getTokens(null))
     }
 
     ngOnInit() {
         this.initChart();
         this.productService.getProductsSmall().then(data => this.products = data);
 
+        this.addressForm = new FormGroup({
+            addressInput: new FormControl('')
+        })
+
         this.items = [
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
             { label: 'Remove', icon: 'pi pi-fw pi-minus' }
         ];
+    }
+
+    getTokens() {
+        const address = this.addressForm.controls['addressInput'].value;
+        console.log('address = ', address)
+        this.tokenService.getTokens(address).subscribe(
+            (result) => {
+                this.tokens = result;
+                console.log(this.tokens)
+            }
+        );
+        
     }
 
     initChart() {

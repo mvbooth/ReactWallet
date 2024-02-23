@@ -2,32 +2,34 @@
         <div class="col-12">
             <div class="card mb-0">
                 <h5>Enter Address</h5>
-                <div class="field">
-                    <label htmlFor="address" class="block">(e.g. 0xEC2AE2C0DEA939A47EB9A5ECC69952E1A62A891F)</label>
-                    <input pInputText id="address" type="text" class="block mb-4"/>
-                    <button pButton label="Submit"></button>
-                </div>
+                    <form [formGroup]="addressForm" (ngSubmit)="getTokens()">
+                        <div class="field">
+                            <label htmlFor="address" class="block">(e.g. 0xEC2AE2C0DEA939A47EB9A5ECC69952E1A62A891F)</label>
+                            <input pInputText id="address" type="text" class="block mb-4" formControlName="addressInput"/>
+                            <button pButton label="Submit"></button>
+                        </div>
+                    </form>
             </div>
         </div>
         <div class="col-12 xl:col-6">
             <div class="card">
-                <h5>Recent Sales</h5>
-                <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                <h5>Wallet</h5>
+                <p-table [value]="tokens" [paginator]="true" [rows]="5" responsiveLayout="scroll">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Image</th>
-                            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                            <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+                            <th>Token</th>
+                            <th pSortableColumn="name">Price <p-sortIcon field="price"></p-sortIcon></th>
+                            <th pSortableColumn="price">Amount <p-sortIcon field="amount"></p-sortIcon></th>
                             <th>View</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-product>
+                    <ng-template pTemplate="body" let-token>
                         <tr>
                             <td style="width: 15%; min-width: 5rem;">
-                                <img src="assets/demo/images/product/{{product.image}}" class="shadow-4" alt="{{product.name}}" width="50">
+                                <img src="assets/demo/images/product/{{token.token.name}}" class="shadow-4" alt="{{token.token.name}}" width="50">
                             </td>
-                            <td style="width: 35%; min-width: 7rem;">{{product.name}}</td>
-                            <td style="width: 35%; min-width: 8rem;">{{product.price | currency:'USD'}}</td>
+                            <td style="width: 35%; min-width: 7rem;">{{token.token.value}}</td>
+                            <td style="width: 35%; min-width: 8rem;">{{token.token.total_supply}}</td>
                             <td style="width: 15%;">
                                 <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only"></button>
                             </td>
